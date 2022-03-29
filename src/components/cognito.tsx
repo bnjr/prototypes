@@ -8,12 +8,12 @@ async function signUp(userName: string) {
   try {
     const {user} = await Auth.signUp({
       username: userName,
-      password: '',
-      // attributes: {
-      //   email,          // optional
-      //   phone_number,   // optional - E.164 number convention
-      //   // other custom attributes 
-      // }
+      password: 'R@nd0mP@ssw0rd',
+      attributes: {
+        email: '',          // optional
+        phone_number: '',   // optional - E.164 number convention
+        // other custom attributes 
+      }
     });
     console.log(user);
   } catch (error) {

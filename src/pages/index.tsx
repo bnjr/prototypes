@@ -5,6 +5,7 @@ import styles from '../styles/Home.module.css'
 import {Animal} from "../models/mobx.example";
 import MobxReaction from "../components/mobx";
 import UserCreation from "../components/cognito";
+import DataList from '../components/datastore';
 
 const Home: NextPage = () => {
 
@@ -25,6 +26,8 @@ const Home: NextPage = () => {
           <MobxReaction animal={new Animal('girafe')} />
           {/* Cognito user */}
           <UserCreation />
+          {/* Data List */}
+          <DataList />
         </div>
       </main>
 
