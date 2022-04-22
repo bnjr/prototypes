@@ -1,9 +1,8 @@
-import {Amplify, Auth, DataStore} from "aws-amplify";
-import awsExports from "../aws-exports";
+import {DataStore} from "aws-amplify";
 import styles from '../styles/Home.module.css'
 import {Dispatch, useState} from "react";
 import {Chat, ChatUsers} from "../models";
-Amplify.configure({...awsExports, ssr: true});
+// Amplify.configure({...awsExports, ssr: true});
 
 async function getData(setChats: Dispatch<Chat[] | undefined>, setChatUsers: Dispatch<ChatUsers[] | undefined>, filter: boolean) {
   try {
