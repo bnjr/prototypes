@@ -1,6 +1,6 @@
 import styles from '../styles/Home.module.css'
 import {useState} from "react";
-import {Animal} from "../models/mobx.example";
+import {Animal} from "../models/local/mobx.example";
 import {autorun} from "mobx";
 
 interface MobxReactionProps {

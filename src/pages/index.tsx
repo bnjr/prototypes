@@ -2,13 +2,14 @@ import type {NextPage} from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import {Animal} from '../models/mobx.example'
+import {Animal} from '../models/local/mobx.example'
 import MobxReaction from '../components/mobx'
 import UserCreation from '../components/cognito'
 import DataList from '../components/datastore'
 import Messaging from '../components/messaging'
 import UserAnalytics from '../components/pinpoint'
 import ContactConfirmation from '../components/confirmContact'
+import DeleteUser from '../components/delete-user'
 
 const Home: NextPage = () => {
   return (
@@ -22,10 +23,11 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <h1 className={styles.title}>Welcome to my Prototypes!</h1>
         <div className={styles.grid}>
-          {/* Mobx */}
-          <MobxReaction animal={new Animal('girafe')} />
+          <DeleteUser />
           {/* Cognito user */}
           <UserCreation />
+          {/* Mobx */}
+          <MobxReaction animal={new Animal('girafe')} />
           {/* Data List */}
           <DataList />
           <Messaging />

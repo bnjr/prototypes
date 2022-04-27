@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import {NavigationActions, NavigationContainerComponent} from 'react-navigation'
+// import {NavigationActions, NavigationContainerComponent} from 'react-navigation'
 import {AxiosError} from 'axios'
 
 export enum Listeners {
@@ -13,20 +13,20 @@ export class ServiceErrorHandler {
   static ROUTE_NAMES = {
     AUTH_FAILED: 'AuthFailed',
   }
-  static navigator: NavigationContainerComponent
+  // static navigator: NavigationContainerComponent
 
-  static setNavigator(navigateRef: NavigationContainerComponent | null) {
-    if (navigateRef) {
-      ServiceErrorHandler.navigator = navigateRef
-    }
-  }
+  // static setNavigator(navigateRef: NavigationContainerComponent | null) {
+  //   if (navigateRef) {
+  //     ServiceErrorHandler.navigator = navigateRef
+  //   }
+  // }
 
   static navigateTo(routeName: string, params?: object) {
-    if (ServiceErrorHandler.navigator && routeName) {
-      ServiceErrorHandler.navigator.dispatch(
-        NavigationActions.navigate({routeName, params}),
-      )
-    }
+    // if (ServiceErrorHandler.navigator && routeName) {
+    //   ServiceErrorHandler.navigator.dispatch(
+    //     // NavigationActions.navigate({routeName, params}),
+    //   )
+    // }
   }
 
   handleError(e: AxiosError): AxiosError | undefined {

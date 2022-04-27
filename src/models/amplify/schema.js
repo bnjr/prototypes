@@ -1,146 +1,5 @@
 export const schema = {
     "models": {
-        "Batch": {
-            "name": "Batch",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "Customers": {
-                    "name": "Customers",
-                    "isArray": true,
-                    "type": {
-                        "model": "User"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "batchID"
-                    }
-                },
-                "Managers": {
-                    "name": "Managers",
-                    "isArray": true,
-                    "type": {
-                        "model": "User"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "batchID"
-                    }
-                },
-                "Service": {
-                    "name": "Service",
-                    "isArray": false,
-                    "type": {
-                        "model": "Service"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": "id",
-                        "targetName": "batchServiceId"
-                    }
-                },
-                "schedule": {
-                    "name": "schedule",
-                    "isArray": false,
-                    "type": {
-                        "nonModel": "Schedule"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "attendance": {
-                    "name": "attendance",
-                    "isArray": true,
-                    "type": {
-                        "nonModel": "Attendance"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true
-                },
-                "Organisation": {
-                    "name": "Organisation",
-                    "isArray": false,
-                    "type": {
-                        "model": "Organisation"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": "id",
-                        "targetName": "batchOrganisationId"
-                    }
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "batchServiceId": {
-                    "name": "batchServiceId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "batchOrganisationId": {
-                    "name": "batchOrganisationId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                }
-            },
-            "syncable": true,
-            "pluralName": "Batches",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "allow": "public",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
         "User": {
             "name": "User",
             "fields": {
@@ -149,6 +8,13 @@ export const schema = {
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
+                    "attributes": []
+                },
+                "subId": {
+                    "name": "subId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "firstName": {
@@ -176,83 +42,6 @@ export const schema = {
                     "name": "email",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "isEmailVerified": {
-                    "name": "isEmailVerified",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "organisationID": {
-                    "name": "organisationID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "associateOf": {
-                    "name": "associateOf",
-                    "isArray": true,
-                    "type": {
-                        "model": "AssociateUsers"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "user"
-                    }
-                },
-                "customerOf": {
-                    "name": "customerOf",
-                    "isArray": true,
-                    "type": {
-                        "model": "CustomerUsers"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "user"
-                    }
-                },
-                "chatParticipantOf": {
-                    "name": "chatParticipantOf",
-                    "isArray": true,
-                    "type": {
-                        "model": "ChatUsers"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "user"
-                    }
-                },
-                "isActive": {
-                    "name": "isActive",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "isProfileCompleted": {
-                    "name": "isProfileCompleted",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "isSkillCompleted": {
-                    "name": "isSkillCompleted",
-                    "isArray": false,
-                    "type": "Boolean",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -291,13 +80,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "isPhoneVerified": {
-                    "name": "isPhoneVerified",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "avatar": {
                     "name": "avatar",
                     "isArray": false,
@@ -322,26 +104,110 @@ export const schema = {
                     "attributes": [],
                     "isArrayNullable": true
                 },
-                "subId": {
-                    "name": "subId",
+                "settings": {
+                    "name": "settings",
+                    "isArray": true,
+                    "type": {
+                        "model": "Settings"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "userSettingsId"
+                    }
+                },
+                "serviceSubscription": {
+                    "name": "serviceSubscription",
+                    "isArray": true,
+                    "type": {
+                        "model": "ServiceSubscription"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "userServiceSubscriptionId"
+                    }
+                },
+                "isPhoneVerified": {
+                    "name": "isPhoneVerified",
                     "isArray": false,
-                    "type": "String",
+                    "type": "Boolean",
                     "isRequired": false,
                     "attributes": []
                 },
-                "dependentsID": {
-                    "name": "dependentsID",
+                "isEmailVerified": {
+                    "name": "isEmailVerified",
                     "isArray": false,
-                    "type": "ID",
+                    "type": "Boolean",
                     "isRequired": false,
                     "attributes": []
                 },
-                "batchID": {
-                    "name": "batchID",
+                "isProfileComplete": {
+                    "name": "isProfileComplete",
                     "isArray": false,
-                    "type": "ID",
+                    "type": "Boolean",
                     "isRequired": false,
                     "attributes": []
+                },
+                "isSkillComplete": {
+                    "name": "isSkillComplete",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "isActive": {
+                    "name": "isActive",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "CustomerOf": {
+                    "name": "CustomerOf",
+                    "isArray": true,
+                    "type": {
+                        "model": "OrganisationCustomers"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "user"
+                    }
+                },
+                "AssociateOf": {
+                    "name": "AssociateOf",
+                    "isArray": true,
+                    "type": {
+                        "model": "OrganisationAssociates"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "user"
+                    }
+                },
+                "OwnerOf": {
+                    "name": "OwnerOf",
+                    "isArray": true,
+                    "type": {
+                        "model": "OrganisationOwners"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "user"
+                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -358,6 +224,20 @@ export const schema = {
                     "isRequired": false,
                     "attributes": [],
                     "isReadOnly": true
+                },
+                "batchCustomersId": {
+                    "name": "batchCustomersId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "batchManagersId": {
+                    "name": "batchManagersId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -366,53 +246,6 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "ByPhone",
-                        "queryField": "userByPhone",
-                        "fields": [
-                            "phone"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "ByEmail",
-                        "queryField": "userByEmail",
-                        "fields": [
-                            "email"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byOrganisation",
-                        "fields": [
-                            "organisationID"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byDependents",
-                        "fields": [
-                            "dependentsID"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byBatch",
-                        "fields": [
-                            "batchID"
-                        ]
-                    }
                 },
                 {
                     "type": "auth",
@@ -432,8 +265,8 @@ export const schema = {
                 }
             ]
         },
-        "Organisation": {
-            "name": "Organisation",
+        "Settings": {
+            "name": "Settings",
             "fields": {
                 "id": {
                     "name": "id",
@@ -442,149 +275,154 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "name": {
-                    "name": "name",
+                "deviceID": {
+                    "name": "deviceID",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
-                "about": {
-                    "name": "about",
+                "calendarID": {
+                    "name": "calendarID",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
-                "owner": {
-                    "name": "owner",
+                "users": {
+                    "name": "users",
                     "isArray": false,
                     "type": {
                         "model": "User"
                     },
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": [],
                     "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": "id",
-                        "targetName": "organisationOwnerId"
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "userSettingsId"
                     }
                 },
-                "services": {
-                    "name": "services",
-                    "isArray": true,
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Settings",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "ServiceSubscription": {
+            "name": "ServiceSubscription",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "startDate": {
+                    "name": "startDate",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "Service": {
+                    "name": "Service",
+                    "isArray": false,
                     "type": {
                         "model": "Service"
                     },
                     "isRequired": false,
                     "attributes": [],
-                    "isArrayNullable": true,
                     "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "organisationID"
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": "id",
+                        "targetName": "serviceSubscriptionServiceId"
                     }
                 },
-                "associates": {
-                    "name": "associates",
-                    "isArray": true,
+                "package": {
+                    "name": "package",
+                    "isArray": false,
                     "type": {
-                        "model": "AssociateUsers"
+                        "nonModel": "Package"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "duration": {
+                    "name": "duration",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "discount": {
+                    "name": "discount",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "Organisation": {
+                    "name": "Organisation",
+                    "isArray": false,
+                    "type": {
+                        "model": "Organisation"
                     },
                     "isRequired": false,
                     "attributes": [],
-                    "isArrayNullable": true,
                     "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "organisation"
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "organisationServiceSubscriptionId"
                     }
                 },
-                "customers": {
-                    "name": "customers",
-                    "isArray": true,
+                "User": {
+                    "name": "User",
+                    "isArray": false,
                     "type": {
-                        "model": "CustomerUsers"
+                        "model": "User"
                     },
                     "isRequired": false,
                     "attributes": [],
-                    "isArrayNullable": true,
                     "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "organisation"
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "userServiceSubscriptionId"
                     }
-                },
-                "isActive": {
-                    "name": "isActive",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "reviews": {
-                    "name": "reviews",
-                    "isArray": true,
-                    "type": {
-                        "model": "Review"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "organisationID"
-                    }
-                },
-                "media": {
-                    "name": "media",
-                    "isArray": false,
-                    "type": {
-                        "nonModel": "Media"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "phone": {
-                    "name": "phone",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "email": {
-                    "name": "email",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "address": {
-                    "name": "address",
-                    "isArray": false,
-                    "type": {
-                        "nonModel": "Address"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "slug": {
-                    "name": "slug",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "isOrganisationCompleted": {
-                    "name": "isOrganisationCompleted",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "isSetupCompleted": {
-                    "name": "isSetupCompleted",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -602,30 +440,20 @@ export const schema = {
                     "attributes": [],
                     "isReadOnly": true
                 },
-                "organisationOwnerId": {
-                    "name": "organisationOwnerId",
+                "serviceSubscriptionServiceId": {
+                    "name": "serviceSubscriptionServiceId",
                     "isArray": false,
                     "type": "ID",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 }
             },
             "syncable": true,
-            "pluralName": "Organisations",
+            "pluralName": "ServiceSubscriptions",
             "attributes": [
                 {
                     "type": "model",
                     "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "orgBySlug",
-                        "queryField": "orgBySlug",
-                        "fields": [
-                            "slug"
-                        ]
-                    }
                 },
                 {
                     "type": "auth",
@@ -679,18 +507,24 @@ export const schema = {
                     "attributes": [],
                     "isArrayNullable": false
                 },
+                "organisation": {
+                    "name": "organisation",
+                    "isArray": false,
+                    "type": {
+                        "model": "Organisation"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "organisationServicesId"
+                    }
+                },
                 "isActive": {
                     "name": "isActive",
                     "isArray": false,
                     "type": "Boolean",
                     "isRequired": true,
-                    "attributes": []
-                },
-                "organisationID": {
-                    "name": "organisationID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
                     "attributes": []
                 },
                 "createdAt": {
@@ -718,15 +552,6 @@ export const schema = {
                     "properties": {}
                 },
                 {
-                    "type": "key",
-                    "properties": {
-                        "name": "byOrganisation",
-                        "fields": [
-                            "organisationID"
-                        ]
-                    }
-                },
-                {
                     "type": "auth",
                     "properties": {
                         "rules": [
@@ -744,8 +569,8 @@ export const schema = {
                 }
             ]
         },
-        "Review": {
-            "name": "Review",
+        "Organisation": {
+            "name": "Organisation",
             "fields": {
                 "id": {
                     "name": "id",
@@ -754,24 +579,105 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "by": {
-                    "name": "by",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "review": {
-                    "name": "review",
+                "name": {
+                    "name": "name",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
                 },
-                "date": {
-                    "name": "date",
+                "about": {
+                    "name": "about",
                     "isArray": false,
-                    "type": "AWSDateTime",
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "media": {
+                    "name": "media",
+                    "isArray": false,
+                    "type": {
+                        "nonModel": "Media"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "phone": {
+                    "name": "phone",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "email": {
+                    "name": "email",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "address": {
+                    "name": "address",
+                    "isArray": false,
+                    "type": {
+                        "nonModel": "Address"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "slug": {
+                    "name": "slug",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "services": {
+                    "name": "services",
+                    "isArray": true,
+                    "type": {
+                        "model": "Service"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "organisationServicesId"
+                    }
+                },
+                "serviceSubscription": {
+                    "name": "serviceSubscription",
+                    "isArray": true,
+                    "type": {
+                        "model": "ServiceSubscription"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "organisationServiceSubscriptionId"
+                    }
+                },
+                "batches": {
+                    "name": "batches",
+                    "isArray": true,
+                    "type": {
+                        "model": "Batch"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "organisationBatchesId"
+                    }
+                },
+                "isOrganisationComplete": {
+                    "name": "isOrganisationComplete",
+                    "isArray": false,
+                    "type": "Boolean",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -782,110 +688,47 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "organisationID": {
-                    "name": "organisationID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                }
-            },
-            "syncable": true,
-            "pluralName": "Reviews",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byOrganisation",
-                        "fields": [
-                            "organisationID"
-                        ]
-                    }
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "allow": "public",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "Chat": {
-            "name": "Chat",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "channelArn": {
-                    "name": "channelArn",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "type": {
-                    "name": "type",
-                    "isArray": false,
-                    "type": {
-                        "enum": "ChatType"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "users": {
-                    "name": "users",
+                "Customers": {
+                    "name": "Customers",
                     "isArray": true,
                     "type": {
-                        "model": "ChatUsers"
+                        "model": "OrganisationCustomers"
                     },
                     "isRequired": false,
                     "attributes": [],
                     "isArrayNullable": true,
                     "association": {
                         "connectionType": "HAS_MANY",
-                        "associatedWith": "chat"
+                        "associatedWith": "organisation"
                     }
                 },
-                "name": {
-                    "name": "name",
-                    "isArray": false,
-                    "type": "String",
+                "Associates": {
+                    "name": "Associates",
+                    "isArray": true,
+                    "type": {
+                        "model": "OrganisationAssociates"
+                    },
                     "isRequired": false,
-                    "attributes": []
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "organisation"
+                    }
+                },
+                "Owners": {
+                    "name": "Owners",
+                    "isArray": true,
+                    "type": {
+                        "model": "OrganisationOwners"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "organisation"
+                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -905,7 +748,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "Chats",
+            "pluralName": "Organisations",
             "attributes": [
                 {
                     "type": "model",
@@ -929,8 +772,8 @@ export const schema = {
                 }
             ]
         },
-        "Settings": {
-            "name": "Settings",
+        "Batch": {
+            "name": "Batch",
             "fields": {
                 "id": {
                     "name": "id",
@@ -939,230 +782,24 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "deviceID": {
-                    "name": "deviceID",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "User": {
-                    "name": "User",
+                "schedule": {
+                    "name": "schedule",
                     "isArray": false,
                     "type": {
-                        "model": "User"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": "id",
-                        "targetName": "settingsUserId"
-                    }
-                },
-                "calendarID": {
-                    "name": "calendarID",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "settingsUserId": {
-                    "name": "settingsUserId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                }
-            },
-            "syncable": true,
-            "pluralName": "Settings",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "allow": "public",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "Dependents": {
-            "name": "Dependents",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "Dependee": {
-                    "name": "Dependee",
-                    "isArray": false,
-                    "type": {
-                        "model": "User"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": "id",
-                        "targetName": "dependentsDependeeId"
-                    }
-                },
-                "Dependent": {
-                    "name": "Dependent",
-                    "isArray": false,
-                    "type": {
-                        "model": "User"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": "id",
-                        "targetName": "dependentsDependentId"
-                    }
-                },
-                "relation": {
-                    "name": "relation",
-                    "isArray": false,
-                    "type": {
-                        "enum": "Relation"
+                        "nonModel": "Schedule"
                     },
                     "isRequired": false,
                     "attributes": []
                 },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "dependentsDependeeId": {
-                    "name": "dependentsDependeeId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "dependentsDependentId": {
-                    "name": "dependentsDependentId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                }
-            },
-            "syncable": true,
-            "pluralName": "Dependents",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "allow": "public",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "ServiceSubscription": {
-            "name": "ServiceSubscription",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "startDate": {
-                    "name": "startDate",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "Organisation": {
-                    "name": "Organisation",
-                    "isArray": false,
+                "attendance": {
+                    "name": "attendance",
+                    "isArray": true,
                     "type": {
-                        "model": "Organisation"
+                        "nonModel": "Attendance"
                     },
                     "isRequired": false,
                     "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": "id",
-                        "targetName": "serviceSubscriptionOrganisationId"
-                    }
-                },
-                "User": {
-                    "name": "User",
-                    "isArray": false,
-                    "type": {
-                        "model": "User"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": "id",
-                        "targetName": "serviceSubscriptionUserId"
-                    }
+                    "isArrayNullable": true
                 },
                 "Service": {
                     "name": "Service",
@@ -1175,31 +812,49 @@ export const schema = {
                     "association": {
                         "connectionType": "HAS_ONE",
                         "associatedWith": "id",
-                        "targetName": "serviceSubscriptionServiceId"
+                        "targetName": "batchServiceId"
                     }
                 },
-                "package": {
-                    "name": "package",
+                "Organisation": {
+                    "name": "Organisation",
                     "isArray": false,
                     "type": {
-                        "nonModel": "Package"
+                        "model": "Organisation"
                     },
                     "isRequired": false,
-                    "attributes": []
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "organisationBatchesId"
+                    }
                 },
-                "discount": {
-                    "name": "discount",
-                    "isArray": false,
-                    "type": "Float",
+                "Customers": {
+                    "name": "Customers",
+                    "isArray": true,
+                    "type": {
+                        "model": "User"
+                    },
                     "isRequired": false,
-                    "attributes": []
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "batchCustomersId"
+                    }
                 },
-                "duration": {
-                    "name": "duration",
-                    "isArray": false,
-                    "type": "Int",
+                "Managers": {
+                    "name": "Managers",
+                    "isArray": true,
+                    "type": {
+                        "model": "User"
+                    },
                     "isRequired": false,
-                    "attributes": []
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "batchManagersId"
+                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -1217,22 +872,8 @@ export const schema = {
                     "attributes": [],
                     "isReadOnly": true
                 },
-                "serviceSubscriptionOrganisationId": {
-                    "name": "serviceSubscriptionOrganisationId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "serviceSubscriptionUserId": {
-                    "name": "serviceSubscriptionUserId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "serviceSubscriptionServiceId": {
-                    "name": "serviceSubscriptionServiceId",
+                "batchServiceId": {
+                    "name": "batchServiceId",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": false,
@@ -1240,7 +881,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "ServiceSubscriptions",
+            "pluralName": "Batches",
             "attributes": [
                 {
                     "type": "model",
@@ -1339,8 +980,8 @@ export const schema = {
                 }
             ]
         },
-        "AssociateUsers": {
-            "name": "AssociateUsers",
+        "OrganisationCustomers": {
+            "name": "OrganisationCustomers",
             "fields": {
                 "id": {
                     "name": "id",
@@ -1393,7 +1034,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "AssociateUsers",
+            "pluralName": "OrganisationCustomers",
             "attributes": [
                 {
                     "type": "model",
@@ -1401,8 +1042,8 @@ export const schema = {
                 }
             ]
         },
-        "CustomerUsers": {
-            "name": "CustomerUsers",
+        "OrganisationAssociates": {
+            "name": "OrganisationAssociates",
             "fields": {
                 "id": {
                     "name": "id",
@@ -1455,7 +1096,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "CustomerUsers",
+            "pluralName": "OrganisationAssociates",
             "attributes": [
                 {
                     "type": "model",
@@ -1463,8 +1104,8 @@ export const schema = {
                 }
             ]
         },
-        "ChatUsers": {
-            "name": "ChatUsers",
+        "OrganisationOwners": {
+            "name": "OrganisationOwners",
             "fields": {
                 "id": {
                     "name": "id",
@@ -1486,17 +1127,17 @@ export const schema = {
                         "targetName": "userID"
                     }
                 },
-                "chat": {
-                    "name": "chat",
+                "organisation": {
+                    "name": "organisation",
                     "isArray": false,
                     "type": {
-                        "model": "Chat"
+                        "model": "Organisation"
                     },
                     "isRequired": true,
                     "attributes": [],
                     "association": {
                         "connectionType": "BELONGS_TO",
-                        "targetName": "chatID"
+                        "targetName": "organisationID"
                     }
                 },
                 "createdAt": {
@@ -1517,7 +1158,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "ChatUsers",
+            "pluralName": "OrganisationOwners",
             "attributes": [
                 {
                     "type": "model",
@@ -1536,11 +1177,17 @@ export const schema = {
                 "YEARLY"
             ]
         },
-        "Duration": {
-            "name": "Duration",
+        "Relation": {
+            "name": "Relation",
             "values": [
-                "ONETIME",
-                "MONTHLY"
+                "SON",
+                "DAUGHTER",
+                "MOTHER",
+                "FATHER",
+                "WIFE",
+                "HUSBAND",
+                "NEPHEW",
+                "NIECE"
             ]
         },
         "ChatType": {
@@ -1551,12 +1198,21 @@ export const schema = {
                 "BATCH"
             ]
         },
-        "Gender": {
-            "name": "Gender",
+        "Profile": {
+            "name": "Profile",
             "values": [
-                "MALE",
-                "FEMALE",
-                "OTHER"
+                "CUSTOMER",
+                "OWNER",
+                "ASSOCIATE",
+                "ADMIN"
+            ]
+        },
+        "Language": {
+            "name": "Language",
+            "values": [
+                "EN",
+                "HI",
+                "BN"
             ]
         },
         "SkillNames": {
@@ -1573,12 +1229,11 @@ export const schema = {
                 "CHESS"
             ]
         },
-        "SkillLevel": {
-            "name": "SkillLevel",
+        "Duration": {
+            "name": "Duration",
             "values": [
-                "BEGINNER",
-                "INTERMEDIATE",
-                "EXPERT"
+                "ONETIME",
+                "MONTHLY"
             ]
         },
         "SkillExperience": {
@@ -1590,33 +1245,20 @@ export const schema = {
                 "MORETHANFIVE"
             ]
         },
-        "Profile": {
-            "name": "Profile",
+        "Gender": {
+            "name": "Gender",
             "values": [
-                "CUSTOMER",
-                "PROVIDER",
-                "ASSOCIATE"
+                "MALE",
+                "FEMALE",
+                "OTHER"
             ]
         },
-        "Relation": {
-            "name": "Relation",
+        "SkillLevel": {
+            "name": "SkillLevel",
             "values": [
-                "SON",
-                "DAUGHTER",
-                "MOTHER",
-                "FATHER",
-                "WIFE",
-                "HUSBAND",
-                "NEPHEW",
-                "NIECE"
-            ]
-        },
-        "Language": {
-            "name": "Language",
-            "values": [
-                "EN",
-                "HI",
-                "BN"
+                "BEGINNER",
+                "INTERMEDIATE",
+                "EXPERT"
             ]
         }
     },
@@ -1787,6 +1429,108 @@ export const schema = {
                 }
             }
         },
+        "Skill": {
+            "name": "Skill",
+            "fields": {
+                "name": {
+                    "name": "name",
+                    "isArray": false,
+                    "type": {
+                        "enum": "SkillNames"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "level": {
+                    "name": "level",
+                    "isArray": false,
+                    "type": {
+                        "enum": "SkillLevel"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "details": {
+                    "name": "details",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "experience": {
+                    "name": "experience",
+                    "isArray": false,
+                    "type": {
+                        "enum": "SkillExperience"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
+        "Image": {
+            "name": "Image",
+            "fields": {
+                "filename": {
+                    "name": "filename",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "height": {
+                    "name": "height",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "width": {
+                    "name": "width",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                }
+            }
+        },
+        "Media": {
+            "name": "Media",
+            "fields": {
+                "images": {
+                    "name": "images",
+                    "isArray": true,
+                    "type": {
+                        "nonModel": "Image"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": false
+                },
+                "banner": {
+                    "name": "banner",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "logo": {
+                    "name": "logo",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "video": {
+                    "name": "video",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": false
+                }
+            }
+        },
         "Package": {
             "name": "Package",
             "fields": {
@@ -1849,109 +1593,7 @@ export const schema = {
                     "attributes": []
                 }
             }
-        },
-        "Media": {
-            "name": "Media",
-            "fields": {
-                "images": {
-                    "name": "images",
-                    "isArray": true,
-                    "type": {
-                        "nonModel": "Image"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": false
-                },
-                "banner": {
-                    "name": "banner",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "logo": {
-                    "name": "logo",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "video": {
-                    "name": "video",
-                    "isArray": true,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": false
-                }
-            }
-        },
-        "Image": {
-            "name": "Image",
-            "fields": {
-                "filename": {
-                    "name": "filename",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "height": {
-                    "name": "height",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "width": {
-                    "name": "width",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                }
-            }
-        },
-        "Skill": {
-            "name": "Skill",
-            "fields": {
-                "name": {
-                    "name": "name",
-                    "isArray": false,
-                    "type": {
-                        "enum": "SkillNames"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "level": {
-                    "name": "level",
-                    "isArray": false,
-                    "type": {
-                        "enum": "SkillLevel"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "details": {
-                    "name": "details",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "experience": {
-                    "name": "experience",
-                    "isArray": false,
-                    "type": {
-                        "enum": "SkillExperience"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                }
-            }
         }
     },
-    "version": "952c3291c18fe1a680fc29e387f48ff5"
+    "version": "a748e37ee9f75b324dccddd1efed7109"
 };
