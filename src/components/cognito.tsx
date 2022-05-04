@@ -1,7 +1,6 @@
 import {Auth, ClientDevice} from 'aws-amplify'
 import styles from '../styles/Home.module.css'
 import {useState} from 'react'
-// Amplify.configure({...awsExports, ssr: true})
 
 async function signUp(userName: string) {
   try {

@@ -1,12 +1,12 @@
 import '../styles/globals.css'
 import type {AppProps} from 'next/app'
-import {Amplify} from 'aws-amplify';
+import {Amplify} from 'aws-amplify'
 
-import {withAuthenticator} from '@aws-amplify/ui-react';
-import '@aws-amplify/ui-react/styles.css';
+import {withAuthenticator} from '@aws-amplify/ui-react'
+import '@aws-amplify/ui-react/styles.css'
 
-import awsExports from '../aws-exports';
-Amplify.configure(awsExports);
+import awsmobile from '../aws-exports'
+Amplify.configure(awsmobile)
 
 function MyApp({Component, pageProps}: AppProps) {
   return <Component {...pageProps} />

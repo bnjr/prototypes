@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^2.10.0",
+    "@aws-sdk/client-chime-sdk-identity": "^3.79.0",
     "@aws-sdk/client-chime-sdk-messaging": "^3.67.0",
     "@aws-sdk/client-cognito-identity-provider": "^3.76.0",
     "@aws-sdk/client-pinpoint": "^3.72.0",

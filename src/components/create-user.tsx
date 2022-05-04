@@ -31,7 +31,7 @@ async function signUpPhoneEmail(
 
     // const response = await accountService.signUp(newUser, password)
     console.log(response)
-    setUserName(response.userSub)
+    setUserName(response.user.getUsername())
   } catch (error) {
     console.error('error signing up:', error)
   }
@@ -90,7 +90,7 @@ async function confirmEmailOtp(userName: string, emailOtp: string, email: string
       console.log({responseUpdate})
     } else {
       console.log({userName})
-      const responseConfirm = await Auth.confirmSignUp(email, emailOtp)
+      const responseConfirm = await Auth.confirmSignUp(userName, emailOtp)
       console.log({responseConfirm})
     }
   } catch (error) {
@@ -108,7 +108,7 @@ async function confirmPhoneOtp(userName: string, phoneOtp: string, phone: string
       )
       console.log({responseUpdate})
     } else {
-      const responseConfirm = await Auth.confirmSignUp(phone, phoneOtp)
+      const responseConfirm = await Auth.confirmSignUp(userName, phoneOtp)
       console.log({responseConfirm})
 
     }

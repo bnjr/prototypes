@@ -2,16 +2,12 @@ import {API, Auth, DataStore} from 'aws-amplify'
 import styles from '../styles/Home.module.css'
 import {Dispatch, SetStateAction, useState} from 'react'
 import {AccountServiceImpl} from '../services'
-
-
 import {User} from '../models/amplify'
 import {ChimeAPI} from '../services/chat/ChimeAPI'
 import {getIdFromArn} from '../utils/usefulFunctions'
+// import {awsmobile} from '../aws-exports'
 
-// import awsExports from '../aws-exports'
-// const apiName = awsExports.aws_cloud_logic_custom[0].name
-import awsExportProd from '../aws-exports'
-const apiName = awsExportProd.aws_cloud_logic_custom[0].name
+const apiName = 'AdminQueries' //awsmobile.aws_cloud_logic_custom[0].name
 
 async function getUser(emailPhone: string): Promise<User | undefined> {
   try {
