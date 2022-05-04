@@ -60,7 +60,7 @@ const userInfo = async () => {
 }
 
 const UserCreation = () => {
-  const [userName, setUserName] = useState('user1')
+  const [userName, setUserName] = useState('sahil')
 
   return (
     <div className={styles.card}>

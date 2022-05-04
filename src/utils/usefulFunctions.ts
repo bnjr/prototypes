@@ -26,3 +26,9 @@ export const mergeArrayOfObjects = (
 export function createEntity<T>(type: {new (r: any): T}, data: any): T {
   return new type(data)
 }
+
+export const getIdFromArn = (arn: string): string => {
+  const arnArray = arn.split('/')
+  if (arnArray) return arnArray[arnArray.length - 1]
+  else throw new Error("Couldn't get id from arn")
+}

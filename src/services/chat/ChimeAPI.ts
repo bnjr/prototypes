@@ -9,19 +9,34 @@ import {
   CreateChannelCommand,
   CreateChannelMembershipCommand,
   CreateChannelMembershipCommandInput,
+  DeleteChannelCommand,
+  DeleteChannelCommandInput,
+  DeleteChannelCommandOutput,
   DeleteChannelMembershipCommand,
+  DescribeChannelCommand,
+  DescribeChannelCommandInput,
+  DescribeChannelCommandOutput,
   GetMessagingSessionEndpointCommand,
   GetMessagingSessionEndpointResponse,
   Identity,
+  ListChannelMembershipsCommand,
+  ListChannelMembershipsCommandInput,
+  ListChannelMembershipsForAppInstanceUserCommand,
+  ListChannelMembershipsForAppInstanceUserCommandInput,
+  ListChannelMembershipsForAppInstanceUserCommandOutput,
   ListChannelMessagesCommand,
   ListChannelMessagesCommandInput,
   SendChannelMessageCommand,
   SendChannelMessageCommandInput,
 } from '@aws-sdk/client-chime-sdk-messaging'
-// import {ChimeClient, Identity} from '@aws-sdk/client-chime'
-// import Chime from 'aws-sdk/clients/chime'
-import {Logger} from 'aws-amplify'
+import {Auth, Logger} from 'aws-amplify'
 import {ICredentials} from '@aws-amplify/core'
+import {
+  ChimeSDKIdentityClient,
+  DeleteAppInstanceUserCommand,
+  DeleteAppInstanceUserCommandInput,
+  DeleteAppInstanceUserCommandOutput,
+} from '@aws-sdk/client-chime-sdk-identity'
 
 /*
  * Chime API
@@ -32,8 +47,7 @@ import {ICredentials} from '@aws-amplify/core'
  */
 export class ChimeAPI {
   chimeMsgClient: ChimeSDKMessagingClient
-  // chimeClient: ChimeClient
-  // chimeSDKClient: Chime
+  chimeIdentityClient: ChimeSDKIdentityClient
   private logger: Logger
   private static instance: ChimeAPI
 
@@ -42,8 +56,10 @@ export class ChimeAPI {
       region: 'us-east-1',
       credentials: credentials,
     })
-    // this.chimeClient = new ChimeClient({region: 'us-east-1'})
-    // this.chimeSDKClient = new Chime({region: 'us-east-1'})
+    this.chimeIdentityClient = new ChimeSDKIdentityClient({
+      region: 'us-east-1',
+      credentials: credentials,
+    })
     this.logger = new Logger('Chime Api')
   }
 
@@ -54,15 +70,19 @@ export class ChimeAPI {
     return ChimeAPI.instance
   }
 
-  static createMemberArn(subId: string): string {
-    return `${appConfig.appInstanceArn}/user/${subId}`
+  static createMemberArn(userId: string): string {
+    return `${appConfig.appInstanceArn}/user/${userId}`
+  }
+
+  async needRefresh() {
+    const session = await Auth.currentSession()
+    const refresh_token = session.getRefreshToken() // receive session from calling cognitoUser.getSession()
+    const credentials = this.chimeMsgClient.config.credentials()
   }
 
   async getMessagingSessionEndpoint(): Promise<GetMessagingSessionEndpointResponse> {
     try {
       this.logger.info(`getMessagingSessionEndpoint start`)
-      // const request = this.chimeSDK.getMessagingSessionEndpoint()
-      // const response = await request.promise()
       const command = new GetMessagingSessionEndpointCommand({})
       const response = await this.chimeMsgClient.send(command)
       this.logger.info(`getMessagingSessionEndpoint end`)
@@ -92,7 +112,7 @@ export class ChimeAPI {
       this.logger.info('sendChannelMessage start')
 
       const input: SendChannelMessageCommandInput = {
-        ChimeBearer: ChimeAPI.createMemberArn(member.subId),
+        ChimeBearer: ChimeAPI.createMemberArn(member.userId),
         ChannelArn: channelArn,
         Content: messageContent,
         Persistence: persistence, // Allowed types are PERSISTENT and NON_PERSISTENT
@@ -108,7 +128,7 @@ export class ChimeAPI {
         response: response,
         CreatedTimestamp: new Date(),
         Sender: {
-          Arn: ChimeAPI.createMemberArn(member.subId),
+          Arn: ChimeAPI.createMemberArn(member.userId),
           Name: member.userId,
         },
       }
@@ -123,13 +143,13 @@ export class ChimeAPI {
 
   async listChannelMessages(
     channelArn: string,
-    subId: string,
-    nextToken = undefined,
+    userId: string,
+    nextToken: string | undefined = undefined,
   ) {
     try {
       this.logger.info('listChannelMessages start')
       const input: ListChannelMessagesCommandInput = {
-        ChimeBearer: ChimeAPI.createMemberArn(subId),
+        ChimeBearer: ChimeAPI.createMemberArn(userId),
         ChannelArn: channelArn,
         NextToken: nextToken,
       }
@@ -150,12 +170,12 @@ export class ChimeAPI {
   async createChannelMembership(
     channelArn: string,
     memberArn: string,
-    subId: string,
+    userId: string,
   ): Promise<Identity | undefined> {
     try {
       this.logger.info('createChannelMembership start')
       const input: CreateChannelMembershipCommandInput = {
-        ChimeBearer: ChimeAPI.createMemberArn(subId),
+        ChimeBearer: ChimeAPI.createMemberArn(userId),
         ChannelArn: channelArn,
         MemberArn: memberArn,
         Type: 'DEFAULT', // OPTIONS ARE: DEFAULT and HIDDEN
@@ -175,12 +195,12 @@ export class ChimeAPI {
   async deleteChannelMembership(
     channelArn: string,
     memberArn: string,
-    subId: string,
+    userId: string,
   ) {
     try {
       this.logger.info('deleteChannelMembership start')
       const input = {
-        ChimeBearer: ChimeAPI.createMemberArn(subId),
+        ChimeBearer: ChimeAPI.createMemberArn(userId),
         ChannelArn: channelArn,
         MemberArn: memberArn,
       }
@@ -199,13 +219,13 @@ export class ChimeAPI {
     name: string,
     mode: ChannelMode,
     privacy: ChannelPrivacy,
-    subId: string,
+    userId: string,
     metadata?: string,
   ) {
     try {
       this.logger.info('createChannel start')
       const input = {
-        ChimeBearer: ChimeAPI.createMemberArn(subId),
+        ChimeBearer: ChimeAPI.createMemberArn(userId),
         AppInstanceArn: appConfig.appInstanceArn,
         Metadata: metadata,
         Name: name,
@@ -219,6 +239,99 @@ export class ChimeAPI {
       this.logger.info('createChannel end')
 
       return response.ChannelArn
+    } catch (error) {
+      this.logger.error({error})
+      throw error
+    }
+  }
+
+  async listChannelMembershipsForAppInstanceUser(userId: string) {
+    this.logger.info('listChannelMembershipsForAppInstanceUser start')
+    const input: ListChannelMembershipsForAppInstanceUserCommandInput = {
+      ChimeBearer: ChimeAPI.createMemberArn(userId),
+    }
+    const command = new ListChannelMembershipsForAppInstanceUserCommand(input)
+    const response = await this.chimeMsgClient.send(command)
+    const channels = response.ChannelMemberships
+    return channels
+  }
+
+  async listChannelMemberships(channelArn: string, userId: string) {
+    this.logger.info('listChannelMemberships start')
+    const input: ListChannelMembershipsCommandInput = {
+      ChimeBearer: ChimeAPI.createMemberArn(userId),
+      ChannelArn: channelArn,
+    }
+    const command = new ListChannelMembershipsCommand(input)
+    const response = await this.chimeMsgClient.send(command)
+
+    console.log(`listChannelMemberships(end)`)
+
+    return response.ChannelMemberships
+  }
+  
+  async deleteChannel(
+    channelArn: string,
+    userId: string,
+  ): Promise<DeleteChannelCommandOutput> {
+    try {
+      const input: DeleteChannelCommandInput = {
+        ChimeBearer: ChimeAPI.createMemberArn(userId),
+        ChannelArn: channelArn,
+      }
+      const command = new DeleteChannelCommand(input)
+      const response = await this.chimeMsgClient.send(command)
+      return response
+    } catch (error) {
+      this.logger.error({error})
+      throw error
+    }
+  }
+
+  async listChannels(
+    userId: string,
+  ): Promise<ListChannelMembershipsForAppInstanceUserCommandOutput> {
+    try {
+      const input: ListChannelMembershipsForAppInstanceUserCommandInput = {
+        ChimeBearer: ChimeAPI.createMemberArn(userId),
+      }
+      const command = new ListChannelMembershipsForAppInstanceUserCommand(input)
+      const response = await this.chimeMsgClient.send(command)
+      return response
+    } catch (error) {
+      this.logger.error({error})
+      throw error
+    }
+  }
+
+  async describeChannel(
+    channelArn: string,
+    userId: string,
+  ): Promise<DescribeChannelCommandOutput> {
+    try {
+      const input: DescribeChannelCommandInput = {
+        ChannelArn: channelArn,
+        ChimeBearer: ChimeAPI.createMemberArn(userId),
+      }
+      const command = new DescribeChannelCommand(input)
+      const response = await this.chimeMsgClient.send(command)
+      return response
+    } catch (error) {
+      this.logger.error({error})
+      throw error
+    }
+  }
+
+  async deleteAppUserInstance(
+    userId: string,
+  ): Promise<DeleteAppInstanceUserCommandOutput> {
+    try {
+      const input: DeleteAppInstanceUserCommandInput = {
+        AppInstanceUserArn: ChimeAPI.createMemberArn(userId),
+      }
+      const command = new DeleteAppInstanceUserCommand(input)
+      const response = await this.chimeIdentityClient.send(command)
+      return response
     } catch (error) {
       this.logger.error({error})
       throw error

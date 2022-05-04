@@ -10,6 +10,7 @@ import Messaging from '../components/messaging'
 import UserAnalytics from '../components/pinpoint'
 import ContactConfirmation from '../components/confirmContact'
 import DeleteUser from '../components/delete-user'
+import CreateUser from '../components/create-user'
 
 const Home: NextPage = () => {
   return (
@@ -24,7 +25,7 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>Welcome to my Prototypes!</h1>
         <div className={styles.grid}>
           <DeleteUser />
-          {/* Cognito user */}
+          <CreateUser />
           <UserCreation />
           {/* Mobx */}
           <MobxReaction animal={new Animal('girafe')} />

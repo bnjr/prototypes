@@ -14,10 +14,8 @@ export interface AccountService extends ApiService {
   //login(username: string, password: string): Promise<ServiceResponse<User>>
   login(username: string, password: string): Promise<any>
   signUp(
-    phone: string,
-    email: string,
+    user: LocalUser,
     password: string,
-    profile: Profile,
     withoutContactInfo?: boolean,
   ): Promise<AccountServiceResponse<LocalUser | undefined, AccountServiceImpl>>
   confirmSignUp(
@@ -41,7 +39,9 @@ export interface AccountService extends ApiService {
     code: string,
   ): Promise<AccountServiceResponse<LocalUser | undefined, AccountService>>
   resendEmailVerificationCode(): Promise<any>
-  resendPhoneVerificationCode(code: string): Promise<any>
+  resendPhoneVerificationCode(
+    code: string,
+  ): Promise<AccountServiceResponse<LocalUser | undefined, AccountService>>
   fetchCurrentUser(): Promise<
     AccountServiceResponse<LocalUser | undefined, AccountService>
   >
@@ -67,5 +67,5 @@ export interface AccountService extends ApiService {
   ): Promise<AccountServiceResponse<any, AccountServiceImpl>>
   getUserFromId(
     userId: string,
-  ): Promise<AccountServiceResponse<User | undefined, AccountServiceImpl>>
+  ): Promise<AccountServiceResponse<LocalUser | undefined, AccountServiceImpl>>
 }

@@ -23,7 +23,6 @@ export class AccountServiceImpl
   }
 
   async getUsers(
-    // identityClient: CognitoIdentityServiceProvider,
     identityClient: CognitoIdentityProviderClient,
     userPoolId: string,
     limit = 60,
@@ -35,12 +34,6 @@ export class AccountServiceImpl
       }
       const command = new ListUsersCommand(input)
       const response = await identityClient.send(command)
-      // const users = await identityClient
-      //   .listUsers({
-      //     Limit: limit,
-      //     UserPoolId: userPoolId,
-      //   })
-      //   .promise()
       this.logger.info(`IdentityService::getUsers: ${JSON.stringify(response)}`)
       return new AccountServiceResponse(
         ResponseType.INFO,
@@ -81,13 +74,6 @@ export class AccountServiceImpl
       }
       const command = new ListUsersCommand(input)
       const response = await identityClient.send(command)
-      // const users = await identityClient
-      //   .listUsers({
-      //     Filter: `username = "${name}"`,
-      //     Limit: 10,
-      //     UserPoolId: userPoolId,
-      //   })
-      //   .promise()
       this.logger.info(`IdentityService::searchByName`) //: ${JSON.stringify(list)}`)
 
       return new AccountServiceResponse(
@@ -125,12 +111,10 @@ export class AccountServiceImpl
         response.username,
       )) as User
 
-      // this.logger.warn('User details:::', currentUser)
-
       const user = new LocalUser({
         ...currentUser,
         phoneNumber: currentUser.phone,
-        subId: response.attributes.sub,
+        // subId: response.attributes.sub,
       })
       const result = new AccountServiceResponse<LocalUser>(
         ResponseType.SUCCESS,
@@ -162,7 +146,6 @@ export class AccountServiceImpl
       const users = await DataStore.query(User, (c) =>
         c.or((c) => c.phone('eq', `+91${username}`).email('eq', username)),
       )
-      // const {items} = (await result).data.listUsers
       if (users.length === 0) {
         return undefined
       } else {
@@ -203,7 +186,7 @@ export class AccountServiceImpl
 
   async getUserFromId(
     userId: string,
-  ): Promise<AccountServiceResponse<User | undefined, AccountServiceImpl>> {
+  ): Promise<AccountServiceResponse<LocalUser | undefined, AccountServiceImpl>> {
     try {
       const user = await DataStore.query(User, userId)
       if (user) {
@@ -213,7 +196,7 @@ export class AccountServiceImpl
         const responseResult = new AccountServiceResponse(
           ResponseType.SUCCESS,
           responseDetails,
-          user,
+          new LocalUser(user),
         )
         return responseResult
       } else {
@@ -224,12 +207,12 @@ export class AccountServiceImpl
         const responseResult = new AccountServiceResponse(
           ResponseType.ERROR,
           responseDetails,
-          user,
+          undefined,
         )
         return responseResult
       }
     } catch (error) {
-      this.logger.error('Rrror getting user from Id:', error)
+      this.logger.error('Error getting user from Id:', error)
       const responseDetails = new ResponseDetails<AccountServiceImpl>(
         new MessageI18n({[I18nTextType.PLAINTEXT]: (error as Error).message}),
         {location: 'getUserFromId', params: {userId}},
@@ -244,98 +227,85 @@ export class AccountServiceImpl
   }
 
   async signUp(
-    phone: string,
-    email: string,
+    user: LocalUser,
     password: string,
-    profile: Profile,
     withoutContactInfo: boolean = false,
   ): Promise<
     AccountServiceResponse<LocalUser | undefined, AccountServiceImpl>
   > {
     try {
-      const user =
-        email && email !== ''
-          ? await this.getUserFromEmail(email)
-          : phone && phone !== ''
-          ? await this.getUserFromPhone(phone)
+      const userDB =
+        user.getEmail() && user.getEmail() !== ''
+          ? await this.getUserFromEmail(user.getEmail())
+          : user.getPhone() && user.getPhone() !== ''
+          ? await this.getUserFromPhone(user.getPhone())
           : undefined
-      if (user) {
+      if (userDB) {
         return new AccountServiceResponse(
           ResponseType.ERROR,
           new ResponseDetails<AccountServiceImpl>(
             new MessageI18n({
               [I18nTextType.TEXT_CODE]: 'alertMessages.phoneAlreadyExists',
             }),
-            {location: 'signUp', params: {phone, email}},
+            {location: 'signUp', params: {user}},
           ),
           undefined,
         )
       } else {
         // Create user in DB
-        let user: User = new User({
-          profile: profile,
+        let newUserData: User = new User({
+          profile: user.profile,
           isActive: false,
         })
 
-        if (email !== '') {
-          user = new User({
-            profile: profile,
-            email,
+        if (user.getEmail() !== '') {
+          newUserData = new User({
+            profile: user.profile,
+            email: user.getEmail(),
+            firstName: user.getFirstName(),
+            lastName: user.getLastName(),
             isActive: false,
           })
         }
-        if (phone !== '') {
-          user = new User({
-            profile: profile,
-            phone,
+        if (user.getPhone() !== '') {
+          newUserData = new User({
+            profile: user.profile,
+            phone: user.getPhone(),
+            firstName: user.getFirstName(),
+            lastName: user.getLastName(),
             isActive: false,
           })
         }
-        if (phone !== '' && email !== '') {
-          user = new User({
-            profile: profile,
-            phone,
-            email,
+        if (user.getPhone() !== '' && user.getEmail() !== '') {
+          newUserData = new User({
+            profile: user.profile,
+            phone: user.getPhone(),
+            email: user.getEmail(),
+            firstName: user.getFirstName(),
+            lastName: user.getLastName(),
             isActive: false,
           })
         }
-        const newUser = await DataStore.save(user)
-        // let profileValue: string = profile
-        // switch (profile) {
-        //   case Profile.ASSOCIATE:
-        //     profileValue = 'associate'
-        //     break
-        //   case Profile.CUSTOMER:
-        //     profileValue = 'customer'
-        //     break
-        //   case Profile.OWNER:
-        //     profileValue = 'owner'
-        //     break
-        // }
+        const newUser = await DataStore.save(newUserData)
+
         // Create user in Cognito
         const authResponse = await Auth.signUp({
           username: newUser.id,
           password: password,
           attributes: {
-            phone_number: withoutContactInfo ? '' : phone,
-            email: withoutContactInfo ? '' : email,
-            'custom:profile_1': profile,
+            phone_number: withoutContactInfo ? '' : user.getPhone(),
+            email: withoutContactInfo ? '' : user.getEmail(),
+            'custom:profile_1': user.profile[0],
           },
           validationData: [], //optional
         })
-        // Update subId in DB
-        const updatedUser = await DataStore.save(
-          User.copyOf(newUser, (updated) => {
-            updated.subId = authResponse.userSub
-          }),
-        )
         this.logger.debug('signUp: reponse', authResponse)
         return new AccountServiceResponse(
           ResponseType.SUCCESS,
           new ResponseDetails(
             new MessageI18n({[I18nTextType.PLAINTEXT]: 'Signup successfull'}),
           ),
-          new LocalUser(updatedUser),
+          new LocalUser(newUser),
         )
       }
     } catch (e) {
@@ -346,7 +316,7 @@ export class AccountServiceImpl
           new MessageI18n({
             [I18nTextType.PLAINTEXT]: 'Signup error has occured',
           }),
-          {location: 'signUp', params: {phone}},
+          {location: 'signUp', params: {user}},
         ),
         undefined,
       )
@@ -473,8 +443,11 @@ export class AccountServiceImpl
           email,
         })
         const responseVerify = await Auth.verifyCurrentUserAttribute('email')
-        
-        if (responseUpdate === 'SUCCESS' && responseVerify as unknown as string === 'SUCCESS') {
+
+        if (
+          responseUpdate === 'SUCCESS' &&
+          (responseVerify as unknown as string) === 'SUCCESS'
+        ) {
           // Can use Datastore as login would have initiated before this
           const originalUser = await DataStore.query(User, user.username)
           // const originalUser = await this.getUserByPhone(currentUser.getPhone())
@@ -581,7 +554,7 @@ export class AccountServiceImpl
             )
             const responseDetails = new ResponseDetails(
               new MessageI18n({
-                [I18nTextType.PLAINTEXT]: 'Phone Added',
+                [I18nTextType.PLAINTEXT]: 'Phone OTP requested',
               }),
             )
             const result = new AccountServiceResponse(
@@ -830,23 +803,60 @@ export class AccountServiceImpl
     }
   }
 
-  async resendPhoneVerificationCode(phone: string) {
+  async resendPhoneVerificationCode(
+    phone: string,
+  ): Promise<AccountServiceResponse<LocalUser | undefined, AccountService>> {
     try {
       const user = await DataStore.query(User, (c) => c.phone('eq', phone))
       const username = user[0].id
       if (username) {
         const response = await Auth.resendSignUp(username)
-        return {
-          error: null,
-          data: 'alertMessages.otpResentSuccessfully',
-        }
+        const responseDetails = new ResponseDetails(
+          new MessageI18n({
+            [I18nTextType.TEXT_CODE]: 'alertMessages.otpResentSuccessfully',
+          }),
+        )
+        const result = new AccountServiceResponse(
+          ResponseType.SUCCESS,
+          responseDetails,
+          new LocalUser(user[0]),
+        )
+        return result
+      } else {
+        const errorDetails = new ResponseDetails<AccountService>(
+          new MessageI18n({
+            [I18nTextType.PLAINTEXT]: 'User not found',
+          }),
+          {
+            location: 'resendPhoneVerificationCode',
+            params: {phone},
+          },
+        )
+        const result = new AccountServiceResponse(
+          ResponseType.ERROR,
+          errorDetails,
+          undefined,
+        )
+        return result
       }
     } catch (e) {
       this.logger.error(e)
-      return {
-        error: (e as Error).message ?? 'Something went wrong',
-        data: 'Something went wrong',
-      }
+      const errorDetails = new ResponseDetails<AccountService>(
+        new MessageI18n({
+          [I18nTextType.PLAINTEXT]:
+            'Something went wrong in requesting phone OTP',
+        }),
+        {
+          location: 'requestPhoneOtp',
+          params: {phone},
+        },
+      )
+      const result = new AccountServiceResponse(
+        ResponseType.ERROR,
+        errorDetails,
+        undefined,
+      )
+      return result
     }
   }
 
