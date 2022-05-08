@@ -12,5 +12,33 @@
       "AmplifyAppId": "d746d5xul9l1a",
       "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-cko-sampledev-231248-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     }
+  },
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-cko-prod-72714-authRole",
+      "UnauthRoleArn": "arn:aws:iam::097212506913:role/amplify-cko-prod-72714-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::097212506913:role/amplify-cko-prod-72714-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-cko-prod-72714-deployment",
+      "UnauthRoleName": "amplify-cko-prod-72714-unauthRole",
+      "StackName": "amplify-cko-prod-72714",
+      "StackId": "arn:aws:cloudformation:ap-south-1:097212506913:stack/amplify-cko-prod-72714/cad007b0-c78d-11ec-be42-0aa4a3e44902",
+      "AmplifyAppId": "d746d5xul9l1a",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-cko-prod-72714-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-cko-dev-153613-authRole",
+      "UnauthRoleArn": "arn:aws:iam::097212506913:role/amplify-cko-dev-153613-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::097212506913:role/amplify-cko-dev-153613-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-cko-dev-153613-deployment",
+      "UnauthRoleName": "amplify-cko-dev-153613-unauthRole",
+      "StackName": "amplify-cko-dev-153613",
+      "StackId": "arn:aws:cloudformation:ap-south-1:097212506913:stack/amplify-cko-dev-153613/c3d5ff70-caf6-11ec-ae71-0641c5bce06e",
+      "AmplifyAppId": "d746d5xul9l1a",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-cko-dev-153613-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+    }
   }
 }
