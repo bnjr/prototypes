@@ -10,7 +10,7 @@ import {
 async function endpoint() {
   try {
     const response = await Analytics.updateEndpoint({
-      address: 'sahil@mirpuri.in', // The unique identifier for the recipient. For example, an address could be a device token, email address, or mobile phone number.
+      address: process.env.NEXT_PUBLIC_EMAIL ? process.env.NEXT_PUBLIC_EMAIL : 'NOT_FOUND', // The unique identifier for the recipient. For example, an address could be a device token, email address, or mobile phone number.
       attributes: {
         // Custom attributes that your app reports to Amazon Pinpoint. You can use these attributes as selection criteria when you create a segment.
         hobbies: ['piano', 'hiking'],
@@ -43,7 +43,7 @@ async function endpoint() {
        */
       optOut: 'ALL',
       // Customized userId
-      userId: 'sahil@mirpuri.in',
+      userId: process.env.NEXT_PUBLIC_EMAIL ? process.env.NEXT_PUBLIC_EMAIL : 'NOT_FOUND',
       // User attributes
       userAttributes: {
         interests: ['football', 'basketball', 'AWS'],
@@ -67,16 +67,16 @@ async function sendEmail() {
     console.log({client})
     // The "From" address. This address has to be verified in Amazon Pinpoint
     // in the region that you use to send email.
-    const senderAddress = 'info@ckoapp.com'
+    const senderAddress = process.env.PINPOINT_SENDER_EMAIL ? process.env.PINPOINT_SENDER_EMAIL : 'NOT_FOUND'
 
     // The address on the "To" line. If your Amazon Pinpoint account is in
     // the sandbox, this address also has to be verified.
-    const toAddress = 'sahil@mirpuri.in'
+    const toAddress = process.env.NEXT_PUBLIC_EMAIL ? process.env.NEXT_PUBLIC_EMAIL : 'NOT_FOUND'
 
     // The Amazon Pinpoint project/application ID to use when you send this message.
     // Make sure that the SMS channel is enabled for the project or application
     // that you choose.
-    const appId = 'a150facef4fd488191e28e7c7089f702'
+    const appId = process.env.PINPOINT_APP_ID ? process.env.PINPOINT_APP_ID : 'NOT_FOUND'
 
     // The subject line of the email.
     const subject = 'Amazon Pinpoint (AWS SDK for JavaScript in Node.js)'

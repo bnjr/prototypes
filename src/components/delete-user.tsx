@@ -5,7 +5,6 @@ import {AccountServiceImpl} from '../services'
 import {User} from '../models/amplify'
 import {ChimeAPI} from '../services/chat/ChimeAPI'
 import {getIdFromArn} from '../utils/usefulFunctions'
-// import {awsmobile} from '../aws-exports'
 
 const apiName = 'AdminQueries' //awsmobile.aws_cloud_logic_custom[0].name
 
@@ -226,10 +225,6 @@ type StatusProps = {
 
 const DeleteStatus = (props: StatusProps) => {
   const {messages} = props
-  // const [messages, setMessages] = useState(new Array<string>())
-  // useEffect(() => {
-  //   console.log('messages:', messages)
-  // }, [messages])
 
   return (
     <div>

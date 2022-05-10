@@ -17,7 +17,6 @@ async function requestEmailOtp(email: string) {
 }
 async function confirmEmailOtp(code: string) {
   try {
-    // const user = await Auth.currentAuthenticatedUser()
     const response = await Auth.verifyCurrentUserAttributeSubmit('email', code)
     console.log({response})
   } catch (error) {

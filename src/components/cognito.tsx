@@ -59,7 +59,7 @@ const userInfo = async () => {
 }
 
 const UserCreation = () => {
-  const [userName, setUserName] = useState('sahil')
+  const [userName, setUserName] = useState(process.env.NEXT_PUBLIC_EMAIL ? process.env.NEXT_PUBLIC_EMAIL : 'NOT_FOUND')
 
   return (
     <div className={styles.card}>

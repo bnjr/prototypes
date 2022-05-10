@@ -2,7 +2,6 @@ import {Auth} from 'aws-amplify'
 import styles from '../styles/Home.module.css'
 import {ChimeAPI} from '../services/chat/ChimeAPI'
 import MessagingService from '../services/chat/MessagingService'
-// Amplify.configure({...awsExports, ssr: true})
 
 async function sessionStart() {
   try {
@@ -14,7 +13,6 @@ async function sessionStart() {
 
     const messagingService = MessagingService.factory(chimeAPI)
     messagingService.connect(userInfo.username)
-    // messagingService.subscribeToMessageUpdate(messagesProcessor)
   } catch (error) {
     console.log('error starting session:', error)
   }
@@ -28,7 +26,6 @@ async function sessionStop() {
 
     const messagingService = MessagingService.factory(chimeAPI)
     messagingService.close()
-    // messagingService.subscribeToMessageUpdate(messagesProcessor)
   } catch (error) {
     console.log('error closing session:', error)
   }
