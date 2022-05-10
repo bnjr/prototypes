@@ -1,10 +1,15 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # amplify-cli
-src/aws-exports.prod.ts
-src/aws-exports.dev.ts
-src/aws-exports.sampledev.ts
-src/aws-exports.js
+aws-exports.*.ts
+
+# CKO
+/src/*
+!/src
+!/src/components
+!/src/pages
+!/src/styles
+/amplify
 
 # dependencies
 /node_modules

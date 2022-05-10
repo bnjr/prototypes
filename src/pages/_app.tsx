@@ -8,6 +8,8 @@ import '@aws-amplify/ui-react/styles.css'
 import awsmobile from '../aws-exports'
 Amplify.configure(awsmobile)
 
+console.log({awsmobile})
+
 function MyApp({Component, pageProps}: AppProps) {
   return <Component {...pageProps} />
 }

@@ -14,11 +14,7 @@ async function signUpPhoneEmail(
   setUserName: (userName: string) => void
 ) {
   try {
-    // const accountService = new AccountServiceImpl()
     const profile = [Profile.OWNER, Profile.ASSOCIATE]
-    // const newUser = new LocalUser({email, phone, profile})
-    // const client = ClientDevice.clientInfo()
-    // console.log({client})
     const response = await Auth.signUp({
       username: v4(),
       password: password,
@@ -29,7 +25,6 @@ async function signUpPhoneEmail(
       },
     })
 
-    // const response = await accountService.signUp(newUser, password)
     console.log(response)
     setUserName(response.user.getUsername())
   } catch (error) {
@@ -78,11 +73,14 @@ async function loginEmail(email: string) {
     console.error('error logging in:', error)
   }
 }
-async function confirmEmailOtp(userName: string, emailOtp: string, email: string) {
+async function confirmEmailOtp(
+  userName: string,
+  emailOtp: string,
+  email: string
+) {
   try {
     const userInfo = await Auth.currentUserInfo()
     if (userInfo) {
-      // const user = await Auth.currentAuthenticatedUser()
       const responseUpdate = await Auth.verifyCurrentUserAttributeSubmit(
         'email',
         emailOtp
@@ -97,20 +95,23 @@ async function confirmEmailOtp(userName: string, emailOtp: string, email: string
     console.error('error logging in:', error)
   }
 }
-async function confirmPhoneOtp(userName: string, phoneOtp: string, phone: string) {
+async function confirmPhoneOtp(
+  userName: string,
+  phoneOtp: string,
+  phone: string
+) {
   try {
     const userInfo = await Auth.currentUserInfo()
     if (userInfo) {
-      // const user = await Auth.currentAuthenticatedUser()
       const responseUpdate = await Auth.verifyCurrentUserAttributeSubmit(
         'phone_number',
         phoneOtp
       )
       console.log({responseUpdate})
     } else {
+      console.log({userName, phoneOtp})
       const responseConfirm = await Auth.confirmSignUp(userName, phoneOtp)
       console.log({responseConfirm})
-
     }
   } catch (error) {
     console.error('error logging in:', error)
@@ -118,8 +119,12 @@ async function confirmPhoneOtp(userName: string, phoneOtp: string, phone: string
 }
 
 const CreateUser = () => {
-  const [phone, setPhone] = useState('+919873145420')
-  const [email, setEmail] = useState('sahil@mirpuri.in')
+  const [phone, setPhone] = useState(
+    process.env.NEXT_PUBLIC_PHONE ? process.env.NEXT_PUBLIC_PHONE : 'NOT_FOUND'
+  )
+  const [email, setEmail] = useState(
+    process.env.NEXT_PUBLIC_EMAIL ? process.env.NEXT_PUBLIC_EMAIL : 'NOT_FOUND'
+  )
   const [emailOtp, setEmailOtp] = useState('')
   const [phoneOtp, setPhoneOtp] = useState('')
   const [userName, setUserName] = useState('')
