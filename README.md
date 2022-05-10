@@ -21,10 +21,11 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 ## Environment
 
 Set environment file with the following variables:
+```
 NEXT_PUBLIC_EMAIL=me@example.com
 NEXT_PUBLIC_PHONE=+91XXXXXXXX
 AWS_ENV=DEV | PROD | ???
-
+```
 See aws-exports.ts for choosing the correct Amplify environment config file.
 
 ## Deploy on Vercel
