@@ -2,13 +2,15 @@ import {Auth, ClientDevice} from 'aws-amplify'
 import styles from '../styles/Home.module.css'
 import {useState} from 'react'
 
+const password = 'Password@123'
+
 async function signUp(userName: string) {
   try {
     const client = ClientDevice.clientInfo()
     console.log({client})
     const response = await Auth.signUp({
       username: userName,
-      password: 'R@nd0mP@ssw0rd',
+      password,
       attributes: {
         email: '', // optional
         phone_number: '', // optional - E.164 number convention
@@ -23,7 +25,7 @@ async function signUp(userName: string) {
 
 async function login(userName: string) {
   try {
-    const authUser = await Auth.signIn(userName, 'R@nd0mP@ssw0rd')
+    const authUser = await Auth.signIn(userName, password)
     console.log({authUser})
   } catch (error) {
     console.error('error logging in:', error)

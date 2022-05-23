@@ -6,7 +6,7 @@ import {Profile} from '../models/amplify'
 import {AccountServiceImpl} from '../services'
 import {v4} from 'uuid'
 
-const password = 'R@nd0mP@ssw0rd'
+const password = 'Password@123'
 
 async function signUpPhoneEmail(
   phone: string,
@@ -87,7 +87,7 @@ async function confirmEmailOtp(
       )
       console.log({responseUpdate})
     } else {
-      console.log({userName})
+      console.log({userName, emailOtp})
       const responseConfirm = await Auth.confirmSignUp(userName, emailOtp)
       console.log({responseConfirm})
     }
