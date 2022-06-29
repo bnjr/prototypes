@@ -3,6 +3,7 @@
 import * as awsmobileprod from './aws-exports.prod'
 import * as awsmobiledev from './aws-exports.dev'
 import * as awsmobiledevtwo from './aws-exports.devtwo'
+import * as awsmobiledevthree from './aws-exports.devthree'
 import * as awsmobilesampledev from './aws-exports.sampledev'
 import * as awsmobiletest from './aws-exports.test'
 import * as awsmobilechime from './aws-exports.chime'
@@ -21,6 +22,10 @@ switch (process.env.NEXT_PUBLIC_AWS_ENV) {
   case 'DEVTWO':
     awsmobileDefault = awsmobiledevtwo.default
     console.log('AWS_ENV is DEVTWO')
+    break
+  case 'DEVTHREE':
+    awsmobileDefault = awsmobiledevthree.default
+    console.log('AWS_ENV is DEVTHREE')
     break
   case 'SAMPLEDEV':
     awsmobileDefault = awsmobilesampledev.default

@@ -11,9 +11,10 @@ const apiName = 'AdminQueries' //awsmobile.aws_cloud_logic_custom[0].name
 async function getUser(emailPhone: string): Promise<User | undefined> {
   try {
     const accountService = new AccountServiceImpl()
-    const userDB = await accountService.getUserByPhoneOrEmail(emailPhone)
-    if (userDB) {
-      return userDB
+    const userDB = await DataStore.query(User)
+    // const userDB = await accountService.getUserByPhoneOrEmail(emailPhone)
+    if (userDB.length > 0) {
+      return userDB[0]
     }
   } catch (error) {
     console.error('error getting user:', error)
@@ -138,16 +139,41 @@ async function disableUser(userId: string): Promise<any> {
   }
 }
 
-async function deleteUser(
+async function listUser(
   emailPhone: string,
+  setMessages: Dispatch<SetStateAction<string[]>>,
+  setUserDB: Dispatch<SetStateAction<User | undefined>>
+) {
+  const creds = await Auth.currentCredentials()
+  try {
+    setMessages(() => ['Starting Get User'])
+    const userDB = await getUser(emailPhone)
+    setUserDB(userDB)
+    if (userDB) {
+      setMessages((previous) => [
+        ...previous,
+        'Got UserId' + userDB.username + userDB.phone + userDB.email,
+      ])
+    } else {
+      setMessages((previous) => [...previous, 'error getting user id'])
+    }
+  } catch (error) {
+    console.error('error listing user:', error)
+  }
+}
+
+async function deleteUser(
+  userDB: User | undefined,
   setMessages: Dispatch<SetStateAction<string[]>>
 ) {
   const creds = await Auth.currentCredentials()
   try {
     setMessages(() => ['Starting Deletion'])
-    const userDB = await getUser(emailPhone)
     if (userDB) {
-      setMessages((previous) => [...previous, 'Got UserId'])
+      setMessages((previous) => [
+        ...previous,
+        'Got UserId' + userDB.id + userDB.phone + userDB.email,
+      ])
       const responseDisable = await disableUser(userDB.id)
       if (responseDisable) {
         // 1. Disable User
@@ -185,10 +211,19 @@ async function deleteUser(
   }
 }
 
+function clearMessages(
+  setDeleteMessages: Dispatch<SetStateAction<string[]>>,
+  setListMessages: Dispatch<SetStateAction<string[]>>
+) {
+  setDeleteMessages(() => [])
+  setListMessages(() => [])
+}
+
 const DeleteUser = () => {
   const [emailPhone, setEmailPhone] = useState('')
-  const [userId, setUserId] = useState('')
-  const [messages, setMessages] = useState(new Array<string>())
+  const [userDB, setUserDB] = useState<User | undefined>()
+  const [deleteMessages, setDeleteMessages] = useState(new Array<string>())
+  const [listMessages, setListMessages] = useState(new Array<string>())
 
   return (
     <div className={styles.card}>
@@ -196,7 +231,7 @@ const DeleteUser = () => {
       <form
         onSubmit={(event) => {
           event.preventDefault()
-          deleteUser(emailPhone, setMessages)
+          listUser(emailPhone, setListMessages, setUserDB)
         }}
       >
         <label>
@@ -210,20 +245,50 @@ const DeleteUser = () => {
             }}
           />
         </label>
-        <input type='submit' value='Delete' />
+        <input type='submit' value='Get User' />
       </form>
-      <DeleteStatus messages={messages} />
+      <ListUser user={userDB} messages={listMessages} />
+      {listMessages.length > 0 && (
+        <button onClick={() => deleteUser(userDB, setDeleteMessages)}>
+          Delete User
+        </button>
+      )}
+      {(listMessages.length > 0 || deleteMessages.length > 0) && (
+        <p className={styles.button}>
+          <button
+            onClick={() => clearMessages(setDeleteMessages, setListMessages)}
+          >
+            Clear Messages
+          </button>
+        </p>
+      )}
+      <DeleteStatus messages={deleteMessages} />
     </div>
   )
 }
 
 export default DeleteUser
+type UserProps = {
+  user: User | undefined
+  messages: string[]
+}
+const ListUser = (props: UserProps) => {
+  const {messages} = props
 
-type StatusProps = {
+  return (
+    <div>
+      {messages.map((message, index) => {
+        return <p key={index}>{message}</p>
+      })}
+    </div>
+  )
+}
+
+type MessagesProps = {
   messages: string[]
 }
 
-const DeleteStatus = (props: StatusProps) => {
+const DeleteStatus = (props: MessagesProps) => {
   const {messages} = props
 
   return (
